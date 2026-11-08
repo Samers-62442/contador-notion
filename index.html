@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Countdown Notion</title>
+
+<style>
+  body {
+    background: #17151f;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 30px 10px;
+  }
+
+  h2 {
+    color: #c6a5ff;
+    font-size: 22px;
+  }
+
+  .contador {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 25px;
+  }
+
+  .bloco {
+    background: #292435;
+    border: 1px solid #55456f;
+    border-radius: 12px;
+    padding: 18px 12px;
+    min-width: 65px;
+  }
+
+  .numero {
+    font-size: 30px;
+    font-weight: bold;
+    color: #d3b6ff;
+  }
+
+  .legenda {
+    font-size: 11px;
+    color: #aaa;
+    margin-top: 7px;
+  }
+
+  input, button {
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    margin: 5px;
+  }
+
+  button {
+    background: #9870d5;
+    color: white;
+    cursor: pointer;
+  }
+</style>
+</head>
+
+<body>
+
+<h2>✨ Minha contagem regressiva</h2>
+
+<p>Escolha a data do seu evento:</p>
+
+<input type="datetime-local" id="data">
+
+<button onclick="iniciar()">Iniciar</button>
+
+<div class="contador">
+  <div class="bloco">
+    <div class="numero" id="dias">00</div>
+    <div class="legenda">DIAS</div>
+  </div>
+
+  <div class="bloco">
+    <div class="numero" id="horas">00</div>
+    <div class="legenda">HORAS</div>
+  </div>
+
+  <div class="bloco">
+    <div class="numero" id="minutos">00</div>
+    <div class="legenda">MINUTOS</div>
+  </div>
+
+  <div class="bloco">
+    <div class="numero" id="segundos">00</div>
+    <div class="legenda">SEGUNDOS</div>
+  </div>
+</div>
+
+<p id="mensagem"></p>
+
+<script>
+let intervalo;
+
+function iniciar() {
+  const valor = document.getElementById("data").value;
+
+  if (!valor) {
+    alert("Escolha uma data!");
+    return;
+  }
+
+  const destino = new Date(valor).getTime();
+
+  clearInterval(intervalo);
+
+  function atualizar() {
+    const agora = Date.now();
+    const diferenca = destino - agora;
+
+    if (diferenca <= 0) {
+      clearInterval(intervalo);
+
+      ["dias", "horas", "minutos", "segundos"]
+        .forEach(id => {
+          document.getElementById(id).textContent = "00";
+        });
+
+      document.getElementById("mensagem").textContent =
+        "🎉 Chegou o grande momento!";
+
+      return;
+    }
+
+    const dias = Math.floor(diferenca / 86400000);
+    const horas = Math.floor((diferenca % 86400000) / 3600000);
+    const minutos = Math.floor((diferenca % 3600000) / 60000);
+    const segundos = Math.floor((diferenca % 60000) / 1000);
+
+    document.getElementById("dias").textContent = dias;
+    document.getElementById("horas").textContent =
+      String(horas).padStart(2, "0");
+    document.getElementById("minutos").textContent =
+      String(minutos).padStart(2, "0");
+    document.getElementById("segundos").textContent =
+      String(segundos).padStart(2, "0");
+
+    document.getElementById("mensagem").textContent =
+      "Seu momento está chegando! 💜";
+  }
+
+  atualizar();
+  intervalo = setInterval(atualizar, 1000);
+}
+</script>
+
+</body>
+</html>
